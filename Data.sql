@@ -21,12 +21,8 @@ CREATE TABLE IF NOT EXISTS user(
 	username VARCHAR(255) UNIQUE NOT NULL,
 	email VARCHAR(255) UNIQUE NOT NULL,
 	passwd VARCHAR(255) NOT NULL,
-	first_name VARCHAR(255) NOT NULL,
-	last_name VARCHAR(255) DEFAULT NULL,
-	gender ENUM('M', 'F', 'O') NOT NULL,
-	birthdate DATETIME NOT NULL,
-	created_on DATETIME NOT NULL DEFAULT NOW(),
-	updated_on DATETIME NOT NULL DEFAULT NOW()
+	purchase_history TEXT DEFAULT NULL,
+	shipping_address VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS shipping_address(
