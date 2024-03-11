@@ -25,20 +25,6 @@ CREATE TABLE IF NOT EXISTS user(
 	shipping_address VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS shipping_address(
-	id BIGINT AUTO_INCREMENT PRIMARY KEY,
-	user_id BIGINT NOT NULL,
-	unit VARCHAR(255) DEFAULT NULL,
-	street VARCHAR(255) NOT NULL,
-	city VARCHAR(255) NOT NULL,
-	province VARCHAR(255) NOT NULL,
-	country VARCHAR(255) NOT NULL,
-	zip_code VARCHAR(255) NOT NULL,
-	created_on DATETIME NOT NULL DEFAULT NOW(),
-	updated_on DATETIME NOT NULL DEFAULT NOW(),
-	CONSTRAINT fk_sa_user_id FOREIGN KEY(user_id) REFERENCES user(id)
-);
-
 CREATE TABLE IF NOT EXISTS comment(
 	id BIGINT AUTO_INCREMENT PRIMARY KEY,
 	user_id BIGINT NOT NULL,
@@ -46,10 +32,9 @@ CREATE TABLE IF NOT EXISTS comment(
 	rating INT NOT NULL,
 	images TEXT DEFAULT NULL,
 	review TEXT DEFAULT NULL, 
-	created_on DATETIME NOT NULL DEFAULT NOW(),
-	updated_on DATETIME NOT NULL DEFAULT NOW(),
 	CONSTRAINT fk_comment_user_id FOREIGN KEY(user_id) REFERENCES user(id),
-	CONSTRAINT fk_comment_product_id FOREIGN KEY(product_id) REFERENCES product(id)
+	CONSTRAINT fk_comment_product_id FOREIGN KEY(product_id) REFERENCES product(id),
+	CONSTRAINT uk_comment_uid_pid UNIQUE(user_id, product_id)
 );
 
 CREATE TABLE IF NOT EXISTS comment_resource(
