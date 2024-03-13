@@ -1,10 +1,8 @@
 <?php
-
-    require_once './configurations/config.php';
     require_once 'utilities.php';
-    require_once './repositories/product.repository.php';
-    require_once (__DIR__.'/validators/product.validator.php');
-    require_once (__DIR__.'/services/product.service.php');
+    require_once (__DIR__.'./repositories/order.repository.php');
+    require_once (__DIR__.'/validators/order.validator.php');
+    require_once (__DIR__.'/services/order.service.php');
 
     header('Content-Type: application/json');
 
@@ -16,19 +14,19 @@
                 $requestBody = file_get_contents("php://input");
                 $data = json_decode($requestBody, true);
                 validateCreateRequest($data);
-                $productCreationRequest = toCreateRequest($data);
-                createProduct($productCreationRequest);
+                $orderCreationRequest = toCreateRequest($data);
+                createOrder($orderCreationRequest);
                 sendSuccess();
                 break;
             }
             case 'PUT' : {
                 $requestBody = file_get_contents("php://input");
                 $data = json_decode($requestBody, true);
-                if (isset($_GET['productId'])) {
-                    $productID = $_GET['productId'];
-                    validateUpdateRequest($productID, $data);
-                    $productUpdateRequest = toUpdateRequest($data);
-                    $response = updateProduct($productUpdateRequest, $productID);
+                if (isset($_GET['orderId'])) {
+                    $orderId = $_GET['orderId'];
+                    validateUpdateRequest($orderId, $data);
+                    $orderUpdateRequest = toUpdateRequest($data);
+                    $response = updateOrder($orderUpdateRequest, $orderId);
                     sendSuccessWithMessage(json_encode($response));
                 } else {
                     sendBadRequest("ERROR: Invalid \'productId\'");
@@ -37,15 +35,15 @@
             }
             case 'GET' : {
                 $response;
-                if (isset($_GET['productId'])) {
-                    validateReadRequest($_GET['productId']);
-                    $productID = $_GET['productId'];
-                    $response = getProductByID($productID);
+                if (isset($_GET['orderId'])) {
+                    validateReadRequest($_GET['orderId']);
+                    $orderId = $_GET['orderId'];
+                    $response = getOrderByID($orderId);
                     if (!$response) {
                         sendBadRequest("ERROR: No Product found by 'productId': $productID");
                     }
                 } else {
-                    $response = getProducts();
+                    $response = getOrders();
                     if (empty($response)) {
                         sendNotFound("ERROR: No Product found");
                     }
@@ -54,10 +52,10 @@
                 break;
             }
             case 'DELETE' : {
-                if (isset($_GET['productId']) && isAValidID($_GET['productId'])) {
-                    deleteProductByID($_GET['productId'], $pdo);
+                if (isset($_GET['orderId']) && isAValidID($_GET['orderId'])) {
+                    deleteOrderByID($_GET['orderId']);
                 } else {
-                    deleteAllProducts($pdo);
+                    deleteOrders();
                 }
                 sendSuccessWithMessage('Deleted');
                 break;
